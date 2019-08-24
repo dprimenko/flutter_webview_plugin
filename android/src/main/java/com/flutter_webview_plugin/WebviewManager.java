@@ -131,6 +131,7 @@ class WebviewManager {
         this.context = context;
         this.resultHandler = new ResultHandler();
         this.platformThreadHandler = new Handler(context.getMainLooper());
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         webViewClient = new BrowserClient();
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -150,9 +151,6 @@ class WebviewManager {
                 return false;
             }
         });
-
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         ((ObservableWebView) webView).setOnScrollChangedCallback(new ObservableWebView.OnScrollChangedCallback() {
             public void onScroll(int x, int y, int oldx, int oldy) {
                 Map<String, Object> yDirection = new HashMap<>();
