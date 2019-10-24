@@ -195,7 +195,6 @@ class WebviewManager {
             //Eclipse will swear at you if you try to put @Override here
             // For Android 3.0+
             public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-
                 mUploadMessage = uploadMsg;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -229,7 +228,6 @@ class WebviewManager {
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
                     FileChooserParams fileChooserParams) {
-//                verifyStoragePermissions(activity);
                 if (mUploadMessageArray != null) {
                     mUploadMessageArray.onReceiveValue(null);
                 }
@@ -282,6 +280,7 @@ class WebviewManager {
             }
         });
         registerJavaScriptChannelNames(channelNames);
+        verifyStoragePermissions(activity);
     }
 
     private Uri getOutputFilename(String intentType) {
