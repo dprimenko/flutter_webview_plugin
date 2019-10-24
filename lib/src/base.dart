@@ -16,15 +16,22 @@ enum WebViewState { shouldStart, startLoad, finishLoad, abortLoad }
 
 /// Singleton class that communicate with a Webview Instance
 class FlutterWebviewPlugin {
-  factory FlutterWebviewPlugin() => _instance ??= FlutterWebviewPlugin._();
+  factory FlutterWebviewPlugin() {
+    if(_instance == null) {
+      const MethodChannel methodChannel = const MethodChannel(_kChannel);
+      _instance = FlutterWebviewPlugin.private(methodChannel);
+    }
+    return _instance;
+  }
 
-  FlutterWebviewPlugin._() {
+  @visibleForTesting
+  FlutterWebviewPlugin.private(this._channel) {
     _channel.setMethodCallHandler(_handleMessages);
   }
 
   static FlutterWebviewPlugin _instance;
 
-  final _channel = const MethodChannel(_kChannel);
+  final MethodChannel _channel;
 
   final _onBack = StreamController<Null>.broadcast();
   final _onDestroy = StreamController<Null>.broadcast();
@@ -120,6 +127,10 @@ class FlutterWebviewPlugin {
   ///     It is always enabled in UIWebView of iOS and  can not be disabled.
   /// - [withLocalUrl]: allow url as a local path
   ///     Allow local files on iOs > 9.0
+  /// - [localUrlScope]: allowed folder for local paths
+  ///     iOS only.
+  ///     If null and withLocalUrl is true, then it will use the url as the scope,
+  ///     allowing only itself to be read.
   /// - [scrollBar]: enable or disable scrollbar
   /// - [supportMultipleWindows] enable multiple windows support in Android
   /// - [invalidUrlRegex] is the regular expression of URLs that web view shouldn't load.
@@ -144,6 +155,7 @@ class FlutterWebviewPlugin {
     bool displayZoomControls,
     bool withLocalStorage,
     bool withLocalUrl,
+    String localUrlScope,
     bool withOverviewMode,
     bool scrollBar,
     bool supportMultipleWindows,
@@ -166,6 +178,7 @@ class FlutterWebviewPlugin {
       'displayZoomControls': displayZoomControls ?? false,
       'withLocalStorage': withLocalStorage ?? true,
       'withLocalUrl': withLocalUrl ?? false,
+      'localUrlScope': localUrlScope,
       'scrollBar': scrollBar ?? true,
       'supportMultipleWindows': supportMultipleWindows ?? false,
       'appCacheEnabled': appCacheEnabled ?? false,
