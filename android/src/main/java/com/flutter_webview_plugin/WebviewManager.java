@@ -1,11 +1,14 @@
 package com.flutter_webview_plugin;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.provider.MediaStore;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.database.Cursor;
@@ -50,6 +54,29 @@ class WebviewManager {
     private final static int FILECHOOSER_RESULTCODE = 1;
     private Uri fileUri;
     private Uri videoUri;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have read or write permission
+        int writePermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int cameraPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+
+        if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED || cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
     private long getFileSize(Uri fileUri) {
         Cursor returnCursor = context.getContentResolver().query(fileUri, null, null, null, null);
@@ -202,6 +229,7 @@ class WebviewManager {
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
                     FileChooserParams fileChooserParams) {
+                verifyStoragePermissions(activity);
                 if (mUploadMessageArray != null) {
                     mUploadMessageArray.onReceiveValue(null);
                 }
