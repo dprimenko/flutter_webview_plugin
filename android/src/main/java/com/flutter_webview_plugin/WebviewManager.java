@@ -229,7 +229,7 @@ class WebviewManager {
             public boolean onShowFileChooser(
                     WebView webView, ValueCallback<Uri[]> filePathCallback,
                     FileChooserParams fileChooserParams) {
-                verifyStoragePermissions(activity);
+//                verifyStoragePermissions(activity);
                 if (mUploadMessageArray != null) {
                     mUploadMessageArray.onReceiveValue(null);
                 }
