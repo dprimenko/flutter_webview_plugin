@@ -108,6 +108,7 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
         String invalidUrlRegex = call.argument("invalidUrlRegex");
         boolean geolocationEnabled = call.argument("geolocationEnabled");
         boolean debuggingEnabled = call.argument("debuggingEnabled");
+        boolean verifyPermissions = call.argument("requestPermissions");
 
         if (webViewManager == null || webViewManager.closed == true) {
             Map<String, Object> arguments = (Map<String, Object>) call.arguments;
@@ -115,7 +116,7 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
             if (arguments.containsKey(JS_CHANNEL_NAMES_FIELD)) {
                 channelNames = (List<String>) arguments.get(JS_CHANNEL_NAMES_FIELD);
             }
-            webViewManager = new WebviewManager(activity, context, channelNames, call.argument("requestPermissions"));
+            webViewManager = new WebviewManager(activity, context, channelNames, verifyPermissions);
         }
 
         FrameLayout.LayoutParams params = buildLayoutParams(call);
