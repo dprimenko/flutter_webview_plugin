@@ -115,7 +115,7 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
             if (arguments.containsKey(JS_CHANNEL_NAMES_FIELD)) {
                 channelNames = (List<String>) arguments.get(JS_CHANNEL_NAMES_FIELD);
             }
-            webViewManager = new WebviewManager(activity, context, channelNames, false);
+            webViewManager = new WebviewManager(activity, context, channelNames, call.argument("requestPermissions"));
         }
 
         FrameLayout.LayoutParams params = buildLayoutParams(call);
