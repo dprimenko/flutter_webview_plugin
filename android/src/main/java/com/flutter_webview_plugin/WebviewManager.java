@@ -152,7 +152,7 @@ class WebviewManager {
     ResultHandler resultHandler;
     Context context;
 
-    WebviewManager(final Activity activity, final Context context, final List<String> channelNames) {
+    WebviewManager(final Activity activity, final Context context, final List<String> channelNames, boolean verifyPermissions) {
         this.webView = new ObservableWebView(activity);
         this.activity = activity;
         this.context = context;
@@ -280,7 +280,9 @@ class WebviewManager {
             }
         });
         registerJavaScriptChannelNames(channelNames);
-        verifyStoragePermissions(activity);
+        if (verifyPermissions) {
+            verifyStoragePermissions(activity);
+        }
     }
 
     private Uri getOutputFilename(String intentType) {
