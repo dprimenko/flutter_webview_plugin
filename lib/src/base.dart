@@ -165,6 +165,7 @@ class FlutterWebviewPlugin {
     String invalidUrlRegex,
     bool geolocationEnabled,
     bool debuggingEnabled,
+    bool requestPermissions
   }) async {
     final args = <String, dynamic>{
       'url': url,
@@ -188,6 +189,7 @@ class FlutterWebviewPlugin {
       'geolocationEnabled': geolocationEnabled ?? false,
       'withOverviewMode': withOverviewMode ?? false,
       'debuggingEnabled': debuggingEnabled ?? false,
+      'requestPermissions': requestPermissions ?? true,
     };
 
     if (headers != null) {
